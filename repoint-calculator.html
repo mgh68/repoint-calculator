@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماشین‌حساب سود مرکب ریپوینت | Repoint Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Persian typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                        mono: ['Plus Jakarta Sans', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .number-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
+
+    <!-- Header -->
+    <header class="border-b border-slate-200 bg-white sticky top-0 z-50 px-6 py-4 md:px-12">
+        <div class="max-w-full mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <!-- Repoint Geometric Logo -->
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center shadow-md">
+                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black bg-gradient-to-l from-orange-600 to-amber-500 bg-clip-text text-transparent flex items-center gap-2">
+                        ربات هوشمند ریپوینت
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 font-medium">Repoint Bot</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 mt-0.5">ماشین‌حساب هوشمند و دقیق محاسبه سود مرکب خودکار</p>
+                </div>
+            </div>
+
+            <!-- Telegram Channel Link Button -->
+            <a href="https://t.me/repoint_plus" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#229ED9] hover:bg-[#1f8fc5] text-white text-xs font-bold shadow-sm transition-all hover:scale-[1.02] cursor-pointer">
+                <!-- Telegram Icon -->
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.58.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.97-.74 3.79-1.65 6.32-2.73 7.59-3.25 3.61-1.48 4.36-1.74 4.85-1.75.11 0 .35.03.5.16.13.1.17.24.18.34.02.1-.01.27-.02.35z"/>
+                </svg>
+                <span>کانال تلگرام ریپوینت پلاس</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-full mx-auto px-6 mt-8 md:px-12 xl:px-16 space-y-8">
+
+        <!-- Horizontal Controls Bar -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+            <div class="flex flex-col gap-6">
+                <div>
+                    <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                        پارامترهای سرمایه‌گذاری ریپوینت
+                    </h2>
+                    <p class="text-[11px] text-slate-400 mt-1">مقادیر متغیرها را مستقیماً تغییر دهید تا محاسبات فوراً به‌روزرسانی شوند.</p>
+                </div>
+
+                <!-- Inputs Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Input 1: Initial Investment -->
+                    <div class="space-y-2">
+                        <label for="initialInput" class="text-xs font-bold text-slate-500">۱. سرمایه اولیه (دلار):</label>
+                        <div class="relative">
+                            <span class="absolute right-3.5 top-2.5 text-slate-400 font-bold text-xs">$</span>
+                            <input type="number" id="initialInput" min="50" max="40000" value="1000" class="w-full pr-7 pl-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 font-bold focus:outline-none focus:border-orange-500 focus:bg-white number-font">
+                        </div>
+                        <div class="flex justify-between text-[9px] text-slate-400 px-1">
+                            <span>حداقل ۵۰ دلار</span>
+                            <span>حداکثر ۴۰,۰۰۰ دلار</span>
+                        </div>
+                    </div>
+
+                    <!-- Input 2: Expected Monthly Profit Rate -->
+                    <div class="space-y-2">
+                        <label for="profitInput" class="text-xs font-bold text-slate-500">۲. سود ماهانه (%):</label>
+                        <div class="relative">
+                            <span class="absolute right-3.5 top-2.5 text-slate-400 font-bold text-xs">%</span>
+                            <input type="number" id="profitInput" min="4" max="16" step="0.1" value="8" class="w-full pr-7 pl-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 font-bold focus:outline-none focus:border-orange-500 focus:bg-white number-font">
+                        </div>
+                        <div class="flex justify-between text-[9px] text-slate-400 px-1">
+                            <span>حداقل ۴ درصد</span>
+                            <span>حداکثر ۱۶ درصد</span>
+                        </div>
+                    </div>
+
+                    <!-- Input 3: Investment Duration (Years) -->
+                    <div class="space-y-2">
+                        <label for="yearsInput" class="text-xs font-bold text-slate-500">۳. مدت زمان (سال):</label>
+                        <div class="relative">
+                            <span class="absolute right-3.5 top-2.5 text-slate-400 font-bold text-xs">سال</span>
+                            <input type="number" id="yearsInput" min="1" max="20" value="4" class="w-full pr-9 pl-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 font-bold focus:outline-none focus:border-orange-500 focus:bg-white number-font">
+                        </div>
+                        <div class="flex justify-between text-[9px] text-slate-400 px-1">
+                            <span>حداقل ۱ سال</span>
+                            <span>حداکثر ۲۰ سال</span>
+                        </div>
+                    </div>
+
+                    <!-- Input 4: Fixed Monthly Additional Deposit -->
+                    <div class="space-y-2">
+                        <label for="depositInput" class="text-xs font-bold text-slate-500">۴. افزودن مبلغ ثابت ماهانه (دلار):</label>
+                        <div class="relative">
+                            <span class="absolute right-3.5 top-2.5 text-slate-400 font-bold text-xs">$</span>
+                            <input type="number" id="depositInput" min="0" max="5000" value="0" class="w-full pr-7 pl-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 font-bold focus:outline-none focus:border-orange-500 focus:bg-white number-font">
+                        </div>
+                        <div class="flex justify-between text-[9px] text-slate-400 px-1">
+                            <span>پس‌انداز اختیاری از ماه دوم</span>
+                            <span>حداکثر ۵,۰۰۰ دلار</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Overview Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                    <span class="text-xs text-slate-400 font-bold">اصل سرمایه‌گذاری اولیه</span>
+                    <h3 id="statInitial" class="text-xl font-black text-slate-900 number-font">$1,000</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                    <span class="text-xs text-slate-400 font-bold">موجودی نهایی کل</span>
+                    <h3 id="statFinal" class="text-xl font-black text-emerald-600 number-font">$40,210</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                    <span class="text-xs text-slate-400 font-bold">سود خالص انباشته</span>
+                    <h3 id="statProfit" class="text-xl font-black text-orange-600 number-font">$39,210</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                <div class="space-y-1">
+                    <span class="text-xs text-slate-400 font-bold">ضریب افزایش کل سرمایه</span>
+                    <h3 id="statMultiplier" class="text-xl font-black text-purple-600 number-font">40x</h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Year Tables Grid (Arranged LEFT TO RIGHT - LTR) -->
+        <div id="yearsTablesGrid" dir="ltr" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Centered Explanation Box Above Footer (as requested) -->
+        <div class="p-6 rounded-2xl bg-orange-50/70 border border-orange-100/80 text-center max-w-4xl mx-auto shadow-sm">
+            <svg class="w-6 h-6 text-orange-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-xs md:text-sm text-slate-700 leading-relaxed font-semibold">
+                محاسبات با اعمال فرمول رشد سود مرکب ماهانه ریپوینت و به صورت پیوسته انجام می‌شوند. شروع سال بعد همواره منطبق بر مانده نهایی سال قبل است.
+                <br>
+                <span class="text-xs text-slate-500 font-normal mt-1 block">توضیح: هزینه لایسنس ربات ۶ دلار برای ۶ ماه (معادل ماهانه ۱ دلار) می‌باشد.</span>
+            </p>
+        </div>
+
+        <!-- 5 Benefit Highlights / Footer Pitch Cards (Restored as requested!) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-4 border-t border-slate-200">
+            <div class="p-4 rounded-2xl bg-white border border-slate-150 flex flex-col items-center text-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-800">محاسبات دقیق و شفاف</h4>
+                    <p class="text-[10px] text-slate-400 mt-1">امکان برنامه‌ریزی دقیق مالی</p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-150 flex flex-col items-center text-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-800">ربات خودکار ریپوینت</h4>
+                    <p class="text-[10px] text-slate-400 mt-1">عملکرد منظم و بدون احساسات</p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-150 flex flex-col items-center text-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-800">رشد مستمر سرمایه</h4>
+                    <p class="text-[10px] text-slate-400 mt-1">استفاده هوشمند از اثر سود مرکب</p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-150 flex flex-col items-center text-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-800">امنیت عالی دارایی</h4>
+                    <p class="text-[10px] text-slate-400 mt-1">مدیریت حساب و لایسنس شفاف</p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-150 flex flex-col items-center text-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-800">نتایج واقعی و عینی</h4>
+                    <p class="text-[10px] text-slate-400 mt-1">آمار واقعی رشد تصاعدی</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JS Logic -->
+    <script>
+        // DOM Elements
+        const initialInput = document.getElementById('initialInput');
+        const profitInput = document.getElementById('profitInput');
+        const yearsInput = document.getElementById('yearsInput');
+        const depositInput = document.getElementById('depositInput');
+
+        // Stats UI elements
+        const statInitial = document.getElementById('statInitial');
+        const statFinal = document.getElementById('statFinal');
+        const statProfit = document.getElementById('statProfit');
+        const statMultiplier = document.getElementById('statMultiplier');
+
+        const yearsTablesGrid = document.getElementById('yearsTablesGrid');
+
+        // App state
+        let appState = {
+            initialCapital: 1000,
+            years: 4,
+            monthlyProfit: 8,
+            monthlyDeposit: 0,
+            deductLicense: false, // Turned off as requested
+            theme: 'light' // Locked to light
+        };
+
+        // Year color schemes (expanded to cycle beautifully for up to 20 years)
+        const yearColorSchemes = [
+            {
+                name: 'سال اول',
+                cardClass: 'border-blue-200/80',
+                headerBg: 'bg-blue-50 text-blue-600 border-blue-100',
+                monthText: 'text-blue-600',
+                coinIcon: `<svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال دوم',
+                cardClass: 'border-emerald-200/80',
+                headerBg: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+                monthText: 'text-emerald-600',
+                coinIcon: `<svg class="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال سوم',
+                cardClass: 'border-orange-200/80',
+                headerBg: 'bg-orange-50 text-orange-600 border-orange-100',
+                monthText: 'text-orange-600',
+                coinIcon: `<svg class="w-5 h-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال چهارم',
+                cardClass: 'border-purple-200/80',
+                headerBg: 'bg-purple-50 text-purple-600 border-purple-100',
+                monthText: 'text-purple-600',
+                coinIcon: `<svg class="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال پنجم',
+                cardClass: 'border-indigo-200/80',
+                headerBg: 'bg-indigo-50 text-indigo-600 border-indigo-100',
+                monthText: 'text-indigo-600',
+                coinIcon: `<svg class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال ششم',
+                cardClass: 'border-pink-200/80',
+                headerBg: 'bg-pink-50 text-pink-600 border-pink-100',
+                monthText: 'text-pink-600',
+                coinIcon: `<svg class="w-5 h-5 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            },
+            {
+                name: 'سال هفتم',
+                cardClass: 'border-teal-200/80',
+                headerBg: 'bg-teal-50 text-teal-600 border-teal-100',
+                monthText: 'text-teal-600',
+                coinIcon: `<svg class="w-5 h-5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`
+            }
+        ];
+
+        // Format money as a rounded whole dollar amount (no decimals!)
+        function formatMoney(amount) {
+            return '$' + Math.round(amount).toLocaleString('en-US');
+        }
+
+        // Initialize App
+        async function init() {
+            try {
+                // Fetch saved settings from Rowboat Data Store
+                const response = await fetch('/_rowboat/data/settings.json');
+                if (response.ok) {
+                    const saved = await response.json();
+                    appState = { ...appState, ...saved };
+                }
+            } catch (err) {
+                console.warn('Could not load saved settings, using defaults.', err);
+            }
+
+            // Lock theme to light and disable license subtraction as requested
+            appState.theme = 'light';
+            appState.deductLicense = false;
+
+            // Sync inputs with appState
+            syncInputsFromState();
+            calculateAndRender();
+        }
+
+        // Sync visual UI elements from current state
+        function syncInputsFromState() {
+            initialInput.value = appState.initialCapital;
+            profitInput.value = appState.monthlyProfit;
+            yearsInput.value = appState.years;
+            depositInput.value = appState.monthlyDeposit;
+        }
+
+        // Save State to Rowboat backend
+        async function saveState() {
+            try {
+                await fetch('/_rowboat/data/settings.json', {
+                    method: 'PUT',
+                    headers: {
+                        'X-Rowboat-App': '1',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(appState)
+                });
+            } catch (err) {
+                console.error('Failed to save settings:', err);
+            }
+        }
+
+        // Calculate whole compound matrix (without license deduction)
+        // With monthly deposit added at the start of each month (EXCEPT Month 1)
+        function calculateCompoundData() {
+            const P = appState.initialCapital;
+            const r = appState.monthlyProfit / 100;
+            const numYears = appState.years;
+            const D = appState.monthlyDeposit;
+
+            let months = [];
+            let currentPrincipal = P;
+
+            const totalMonths = numYears * 12;
+
+            for (let m = 1; m <= totalMonths; m++) {
+                let startCapital = currentPrincipal;
+                let addedThisMonth = 0;
+
+                // Deposit added at the start of each month EXCEPT Month 1
+                if (m > 1) {
+                    startCapital += D;
+                    addedThisMonth = D;
+                }
+
+                // Profit calculated based on start capital (which includes the deposit)
+                const profit = Math.round(startCapital * r);
+                const ending = startCapital + profit;
+                
+                months.push({
+                    monthNumber: m,
+                    yearNumber: Math.ceil(m / 12),
+                    monthInYear: (m - 1) % 12 + 1,
+                    principal: Math.round(startCapital),
+                    profit: Math.round(profit),
+                    deposit: addedThisMonth,
+                    ending: Math.round(ending)
+                });
+
+                currentPrincipal = ending;
+            }
+
+            return months;
+        }
+
+        // Convert number to Persian year text dynamically
+        function getYearName(yearNum) {
+            const schemeIndex = (yearNum - 1) % yearColorSchemes.length;
+            const basicName = yearColorSchemes[schemeIndex].name;
+            
+            if (yearNum <= 7) {
+                return basicName;
+            } else {
+                return `سال ${yearNum}`;
+            }
+        }
+
+        // Perform calculation and render tables LTR with fixed column layout
+        function calculateAndRender() {
+            const monthsData = calculateCompoundData();
+            
+            // 1. Update stats
+            const initialCap = appState.initialCapital;
+            const finalBalance = monthsData.length > 0 ? monthsData[monthsData.length - 1].ending : initialCap;
+            const netProfit = finalBalance - initialCap - (appState.monthlyDeposit * (monthsData.length - 1));
+            const multiplier = finalBalance / initialCap;
+
+            statInitial.textContent = formatMoney(initialCap);
+            statFinal.textContent = formatMoney(finalBalance);
+            statProfit.textContent = formatMoney(Math.max(0, netProfit));
+            statMultiplier.textContent = Math.round(multiplier) + 'x';
+
+            // 2. Render Tables Grid
+            yearsTablesGrid.innerHTML = '';
+            
+            // Group data by year
+            const yearsCount = appState.years;
+            
+            for (let y = 1; y <= yearsCount; y++) {
+                const yearData = monthsData.filter(m => m.yearNumber === y);
+                const scheme = yearColorSchemes[(y - 1) % yearColorSchemes.length];
+                
+                if (yearData.length === 0) continue;
+
+                const yearStart = yearData[0].principal;
+                const yearEnd = yearData[yearData.length - 1].ending;
+                const yearProfit = yearData.reduce((sum, m) => sum + m.profit, 0);
+
+                // Create the table card (LTR aligned)
+                const yearCard = document.createElement('div');
+                yearCard.className = `p-5 rounded-2xl bg-white border transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-md ${scheme.cardClass}`;
+                
+                let tableRows = '';
+                yearData.forEach(m => {
+                    tableRows += `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="py-2.5 text-left font-black ${scheme.monthText} number-font">${m.monthNumber}</td>
+                            <td class="py-2.5 text-left text-slate-500 font-medium number-font">${formatMoney(m.principal)}</td>
+                            <td class="py-2.5 text-left text-orange-600 font-bold number-font">${formatMoney(m.profit)}</td>
+                            ${appState.monthlyDeposit > 0 ? `<td class="py-2.5 text-left text-emerald-600 font-bold number-font">${m.deposit > 0 ? `+` + formatMoney(m.deposit) : '-'}</td>` : ''}
+                            <td class="py-2.5 text-left text-slate-900 font-black number-font">${formatMoney(m.ending)}</td>
+                        </tr>
+                    `;
+                });
+
+                // Set column layout with colgroup to fix widths perfectly so there is no layout jump on value change
+                let colgroup = `
+                    <colgroup>
+                        <col class="w-[12%]">
+                        <col class="w-[25%]">
+                        <col class="w-[23%]">
+                        <col class="w-[18%]">
+                        <col class="w-[22%]">
+                    </colgroup>
+                `;
+                
+                let extraHeaders = '';
+                if (appState.monthlyDeposit > 0) {
+                    extraHeaders += `<th class="py-2 text-left text-[10px] font-bold text-slate-400 tracking-wider">افزودن</th>`;
+                } else {
+                    colgroup = `
+                        <colgroup>
+                            <col class="w-[15%]">
+                            <col class="w-[30%]">
+                            <col class="w-[25%]">
+                            <col class="w-[30%]">
+                        </colgroup>
+                    `;
+                }
+
+                const displayYearName = getYearName(y);
+
+                yearCard.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- Year Card Header -->
+                        <div class="flex justify-between items-center pb-2 border-b border-slate-100" dir="rtl">
+                            <span class="px-2.5 py-1 text-xs font-black rounded-lg ${scheme.headerBg}">
+                                ${displayYearName}
+                            </span>
+                        </div>
+
+                        <!-- LTR Fixed-Layout Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full table-fixed text-left border-collapse">
+                                ${colgroup}
+                                <thead>
+                                    <tr class="border-b border-slate-150">
+                                        <th class="py-2 text-left text-[10px] font-bold text-slate-400 tracking-wider">ماه</th>
+                                        <th class="py-2 text-left text-[10px] font-bold text-slate-400 tracking-wider">اصل سرمایه</th>
+                                        <th class="py-2 text-left text-[10px] font-bold text-orange-500 tracking-wider">سود (${appState.monthlyProfit}%)</th>
+                                        ${extraHeaders}
+                                        <th class="py-2 text-left text-[10px] font-bold text-slate-800 tracking-wider">پایان ماه</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tableRows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Year Summary (Persian text, LTR format container) -->
+                    <div class="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between" dir="rtl">
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-slate-400 font-bold block">مانده انتهای ${displayYearName}:</span>
+                            <div class="text-base font-black text-slate-900 number-font">${formatMoney(yearEnd)}</div>
+                            <span class="text-[9px] text-emerald-600 font-bold">+${formatMoney(yearProfit)} سود خالص سال</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white border border-slate-150 shadow-sm">
+                            ${scheme.coinIcon}
+                        </div>
+                    </div>
+                `;
+
+                yearsTablesGrid.appendChild(yearCard);
+            }
+        }
+
+        // Bind control elements with input filtering
+        function bindControl(inputEl, stateKey) {
+            function update(value) {
+                let numVal = Number(value);
+
+                // Validate bounds
+                if (stateKey === 'initialCapital') {
+                    if (numVal < 50) numVal = 50;
+                    if (numVal > 40000) numVal = 40000;
+                } else if (stateKey === 'monthlyProfit') {
+                    if (numVal < 4) numVal = 4;
+                    if (numVal > 16) numVal = 16;
+                } else if (stateKey === 'years') {
+                    if (numVal < 1) numVal = 1;
+                    if (numVal > 20) numVal = 20;
+                } else if (stateKey === 'monthlyDeposit') {
+                    if (numVal < 0) numVal = 0;
+                    if (numVal > 5000) numVal = 5000;
+                }
+
+                appState[stateKey] = numVal;
+
+                calculateAndRender();
+                saveState();
+            }
+
+            inputEl.addEventListener('input', (e) => update(e.target.value));
+            inputEl.addEventListener('blur', (e) => {
+                update(e.target.value);
+                // Force sync text input value on blur to reflect corrected bounds
+                inputEl.value = appState[stateKey];
+            });
+        }
+
+        bindControl(initialInput, 'initialCapital');
+        bindControl(profitInput, 'monthlyProfit');
+        bindControl(yearsInput, 'years');
+        bindControl(depositInput, 'monthlyDeposit');
+
+        // Listen for Rowboat state updates from other surfaces
+        window.addEventListener('rowboat:data-change', (e) => {
+            e.preventDefault();
+            init();
+        });
+
+        // Bootstrap App
+        init();
+    </script>
+</body>
+</html>
