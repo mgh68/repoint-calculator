@@ -12,7 +12,7 @@
   // ==============================================================
   const SITE_OPTIONS = {
     // orange | ocean | violet | green | dark | custom | custom-dark
-    defaultTheme: 'orange',
+    defaultTheme: 'dark',
 
     // رنگ‌های دلخواه فقط برای custom و custom-dark
     primaryColor: '#f97316',
